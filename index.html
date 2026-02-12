@@ -1,137 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Save The Date</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wedding Invite</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Inter:wght@300&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        margin: 0;
-        font-family: 'Georgia', serif;
-        background: linear-gradient(135deg, #f8e8dc, #e9d5c3);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-    .card {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        width: 350px;
-        position: relative;
-    }
+body{
+height:100vh;
+background:#e9e3db;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Inter',sans-serif;
+}
 
-    h1 {
-        margin: 0;
-        font-size: 32px;
-        color: #b76e79;
-    }
+/* SCENE */
+.scene{
+position:relative;
+width:360px;
+height:520px;
+cursor:pointer;
+}
 
-    h2 {
-        margin: 10px 0 20px 0;
-        font-weight: normal;
-        color: #555;
-    }
+/* ================= GMAIL-STYLE ENVELOPE ================= */
 
-    .scratch-container {
-        position: relative;
-        width: 300px;
-        height: 100px;
-        margin: 20px auto;
-    }
+.envelope{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:320px;
+height:210px;
+background:#0c0c0c;
+border-radius:26px;
+z-index:3;
+overflow:hidden;
+box-shadow:0 30px 60px rgba(0,0,0,0.45);
+transition:opacity 1s ease;
+}
 
-    .date-text {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        font-weight: bold;
-        color: #b76e79;
-    }
+/* RED DIAGONAL PANELS */
+.env-top-left,
+.env-top-right,
+.env-bottom-left,
+.env-bottom-right{
+position:absolute;
+width:50%;
+height:50%;
+background:#d32f2f;
+}
 
-    canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 10px;
-    }
+/* TOP */
+.env-top-left{
+top:0; left:0;
+clip-path:polygon(0 0,100% 100%,0 100%);
+transform-origin:top left;
+transition:transform 1s ease;
+}
+.env-top-right{
+top:0; right:0;
+clip-path:polygon(100% 0,100% 100%,0 100%);
+transform-origin:top right;
+transition:transform 1s ease;
+}
 
-    p {
-        font-size: 14px;
-        color: #777;
-    }
+/* BOTTOM */
+.env-bottom-left{
+bottom:0; left:0;
+clip-path:polygon(0 0,100% 0,0 100%);
+}
+.env-bottom-right{
+bottom:0; right:0;
+clip-path:polygon(100% 0,100% 100%,0 0);
+}
+
+/* INNER PAPER SHINE */
+.envelope::after{
+content:'';
+position:absolute;
+inset:0;
+background:
+linear-gradient(45deg,transparent 49%,rgba(255,255,255,0.08) 50%,transparent 51%),
+linear-gradient(-45deg,transparent 49%,rgba(255,255,255,0.08) 50%,transparent 51%);
+pointer-events:none;
+}
+
+/* TAP */
+.tap{
+position:absolute;
+bottom:-30px;
+width:100%;
+text-align:center;
+font-size:11px;
+letter-spacing:2px;
+color:#666;
+}
+
+/* ================= CARD ================= */
+
+.card{
+position:absolute;
+top:50%;
+left:50%;
+width:300px;
+height:420px;
+transform:translate(-50%,-50%) scale(.9);
+background:#111;
+overflow:hidden;
+border-radius:6px;
+box-shadow:0 30px 60px rgba(0,0,0,0.35);
+z-index:1;
+opacity:0;
+transition:all 1.2s cubic-bezier(.77,0,.18,1);
+}
+
+/* IMAGE */
+.card img{
+width:100%;
+height:100%;
+object-fit:cover;
+filter:grayscale(100%);
+opacity:0;
+transition:opacity 1.2s ease .6s;
+}
+
+/* TEXT */
+.overlay{
+position:absolute;
+inset:0;
+padding:36px 26px;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+text-align:center;
+opacity:0;
+transition:opacity 1.2s ease .8s;
+}
+
+.top-name{
+font-family:'Playfair Display',serif;
+font-size:42px;
+letter-spacing:6px;
+font-weight:300;
+}
+
+.mid-text{
+font-size:11px;
+letter-spacing:3px;
+line-height:1.6;
+opacity:.85;
+}
+
+.bottom-name{
+font-family:'Playfair Display',serif;
+font-size:30px;
+letter-spacing:3px;
+font-weight:300;
+}
+
+/* ================= OPEN ================= */
+
+.open .env-top-left{
+transform:rotateX(180deg);
+}
+.open .env-top-right{
+transform:rotateX(180deg);
+}
+
+.open .envelope{
+opacity:.25;
+z-index:0;
+}
+
+.open .card{
+opacity:1;
+transform:translate(-50%,-72%) scale(1);
+z-index:2;
+}
+
+.open img{opacity:1;}
+.open .overlay{opacity:1;}
+
+/* MOBILE */
+@media(max-width:600px){
+.scene{transform:scale(.88);}
+}
 </style>
 </head>
 
 <body>
 
+<div class="scene" onclick="openInvite()" id="scene">
+
+<!-- CARD -->
 <div class="card">
-    <h1>Save The Date</h1>
-    <h2>Emily & Jason</h2>
+<img src="Photo.jpeg" alt="Couple">
 
-    <p>Scratch below to reveal our wedding date</p>
+<div class="overlay">
+<div class="top-name">NICOLE</div>
 
-    <div class="scratch-container">
-        <div class="date-text">October 12, 2024</div>
-        <canvas id="scratchCanvas"></canvas>
-    </div>
+<div class="mid-text">
+INVITE YOU TO THE CELEBRATION OF THEIR MARRIAGE
+<br><br>
+SATURDAY, AUGUST 14, 2026 AT 6PM
+<br>
+PROMONTORY POINT, BURNHAM PARK
+</div>
 
-    <p>We can't wait to celebrate with you ❤️</p>
+<div class="bottom-name">& RICHARD</div>
+</div>
+</div>
+
+<!-- ENVELOPE -->
+<div class="envelope">
+  <div class="env-top-left"></div>
+  <div class="env-top-right"></div>
+  <div class="env-bottom-left"></div>
+  <div class="env-bottom-right"></div>
+  <div class="tap">CLICK TO OPEN</div>
+</div>
+
 </div>
 
 <script>
-const canvas = document.getElementById("scratchCanvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = 300;
-canvas.height = 100;
-
-// Fill scratch layer
-ctx.fillStyle = "#c0c0c0";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-// Add scratch text
-ctx.fillStyle = "#999";
-ctx.font = "20px Arial";
-ctx.fillText("Scratch Here 🎉", 85, 55);
-
-let isDrawing = false;
-
-function getPosition(e) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        x: (e.touches ? e.touches[0].clientX : e.clientX) - rect.left,
-        y: (e.touches ? e.touches[0].clientY : e.clientY) - rect.top
-    };
+function openInvite(){
+  document.getElementById("scene").classList.toggle("open");
 }
-
-function scratch(e) {
-    if (!isDrawing) return;
-    e.preventDefault();
-    const pos = getPosition(e);
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, 20, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-// Mouse Events
-canvas.addEventListener("mousedown", () => isDrawing = true);
-canvas.addEventListener("mouseup", () => isDrawing = false);
-canvas.addEventListener("mousemove", scratch);
-
-// Touch Events (for phones)
-canvas.addEventListener("touchstart", () => isDrawing = true);
-canvas.addEventListener("touchend", () => isDrawing = false);
-canvas.addEventListener("touchmove", scratch);
 </script>
 
 </body>
