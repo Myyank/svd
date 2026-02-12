@@ -1,239 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wedding Invite</title>
+  <title>Wedding Invite</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Inter:wght@300&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400&family=Great+Vibes&display=swap"
+    rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body{
-height:100vh;
-background:#e9e3db;
-display:flex;
-justify-content:center;
-align-items:center;
-font-family:'Inter',sans-serif;
-}
+    body {
+      height: 100vh;
+      background: #e9e3db;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+    }
 
-/* SCENE */
-.scene{
-position:relative;
-width:360px;
-height:520px;
-cursor:pointer;
-}
+    /* SCENE */
+    .scene {
+      position: relative;
+      width: 360px;
+      height: 520px;
+      cursor: pointer;
+    }
 
-/* ================= GMAIL-STYLE ENVELOPE ================= */
+    /* ================= ELEGANT ANIMATED ENVELOPE ================= */
 
-.envelope{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:320px;
-height:210px;
-background:#0c0c0c;
-border-radius:26px;
-z-index:3;
-overflow:hidden;
-box-shadow:0 30px 60px rgba(0,0,0,0.45);
-transition:opacity 1s ease;
-}
+    .envelope {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 210px;
+      z-index: 3;
+      transition: opacity 1s ease 0.6s;
+      cursor: pointer;
+    }
 
-/* RED DIAGONAL PANELS */
-.env-top-left,
-.env-top-right,
-.env-bottom-left,
-.env-bottom-right{
-position:absolute;
-width:50%;
-height:50%;
-background:#d32f2f;
-}
+    /* Base envelope body */
+    .envelope-base {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #fef9f5 0%, #f9f3ed 100%);
+      border-radius: 8px;
+      border: 2px solid #e8d5c4;
+      box-shadow: 0 30px 60px rgba(139, 115, 85, 0.25);
+    }
 
-/* TOP */
-.env-top-left{
-top:0; left:0;
-clip-path:polygon(0 0,100% 100%,0 100%);
-transform-origin:top left;
-transition:transform 1s ease;
-}
-.env-top-right{
-top:0; right:0;
-clip-path:polygon(100% 0,100% 100%,0 100%);
-transform-origin:top right;
-transition:transform 1s ease;
-}
+    /* Decorative gold corners on base */
+    .envelope-base::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1.5px solid #d4af37;
+      border-radius: 4px;
+      opacity: 0.4;
+    }
 
-/* BOTTOM */
-.env-bottom-left{
-bottom:0; left:0;
-clip-path:polygon(0 0,100% 0,0 100%);
-}
-.env-bottom-right{
-bottom:0; right:0;
-clip-path:polygon(100% 0,100% 100%,0 0);
-}
+    /* Top flap - left side */
+    .env-flap-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 50%;
+      background: linear-gradient(135deg, #f5e6f1 0%, #e8d4e0 100%);
+      transform-origin: bottom left;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+      border-top-left-radius: 8px;
+      box-shadow: inset -1px -1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+    }
 
-/* INNER PAPER SHINE */
-.envelope::after{
-content:'';
-position:absolute;
-inset:0;
-background:
-linear-gradient(45deg,transparent 49%,rgba(255,255,255,0.08) 50%,transparent 51%),
-linear-gradient(-45deg,transparent 49%,rgba(255,255,255,0.08) 50%,transparent 51%);
-pointer-events:none;
-}
+    /* Top flap - right side */
+    .env-flap-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 50%;
+      background: linear-gradient(135deg, #e8d4e0 0%, #f5e6f1 100%);
+      transform-origin: bottom right;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+      border-top-right-radius: 8px;
+      box-shadow: inset 1px -1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+    }
 
-/* TAP */
-.tap{
-position:absolute;
-bottom:-30px;
-width:100%;
-text-align:center;
-font-size:11px;
-letter-spacing:2px;
-color:#666;
-}
+    /* Decorative lavender flourishes on flaps */
+    .env-flap-left::after,
+    .env-flap-right::after {
+      content: '❦';
+      position: absolute;
+      font-size: 24px;
+      color: #d4af37;
+      opacity: 0.5;
+    }
 
-/* ================= CARD ================= */
+    .env-flap-left::after {
+      top: 15px;
+      left: 20px;
+    }
 
-.card{
-position:absolute;
-top:50%;
-left:50%;
-width:300px;
-height:420px;
-transform:translate(-50%,-50%) scale(.9);
-background:#111;
-overflow:hidden;
-border-radius:6px;
-box-shadow:0 30px 60px rgba(0,0,0,0.35);
-z-index:1;
-opacity:0;
-transition:all 1.2s cubic-bezier(.77,0,.18,1);
-}
+    .env-flap-right::after {
+      top: 15px;
+      right: 20px;
+    }
 
-/* IMAGE */
-.card img{
-width:100%;
-height:100%;
-object-fit:cover;
-filter:grayscale(100%);
-opacity:0;
-transition:opacity 1.2s ease .6s;
-}
+    /* Ribbon bow on top */
+    .envelope-bow {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 80px;
+      z-index: 10;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      filter: drop-shadow(0 4px 12px rgba(139, 115, 85, 0.3));
+    }
 
-/* TEXT */
-.overlay{
-position:absolute;
-inset:0;
-padding:36px 26px;
-color:white;
-display:flex;
-flex-direction:column;
-justify-content:space-between;
-text-align:center;
-opacity:0;
-transition:opacity 1.2s ease .8s;
-}
+    .envelope-bow img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
-.top-name{
-font-family:'Playfair Display',serif;
-font-size:42px;
-letter-spacing:6px;
-font-weight:300;
-}
+    .envelope:hover {
+      transform: translate(-50%, -50%) scale(1.02);
+    }
 
-.mid-text{
-font-size:11px;
-letter-spacing:3px;
-line-height:1.6;
-opacity:.85;
-}
+    /* TAP */
+    .tap {
+      position: absolute;
+      bottom: -30px;
+      width: 100%;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #a89070;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-.bottom-name{
-font-family:'Playfair Display',serif;
-font-size:30px;
-letter-spacing:3px;
-font-weight:300;
-}
+    /* WEDDING CARD */
 
-/* ================= OPEN ================= */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 420px;
+      transform: translate(-50%, -50%) scale(.9);
+      background: linear-gradient(to bottom, #fffbf5 0%, #fff 100%);
+      overflow: hidden;
+      border-radius: 6px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+      z-index: 1;
+      opacity: 0;
+      transition: all 1.2s cubic-bezier(.77, 0, .18, 1);
+      border: 3px solid #d4af37;
+      position: relative;
+    }
 
-.open .env-top-left{
-transform:rotateX(180deg);
-}
-.open .env-top-right{
-transform:rotateX(180deg);
-}
+    /* Background IMAGE */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('Photo.jpeg');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(100%) opacity(0.3);
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease .6s;
+    }
 
-.open .envelope{
-opacity:.25;
-z-index:0;
-}
+    .open .card::before {
+      opacity: 1;
+    }
 
-.open .card{
-opacity:1;
-transform:translate(-50%,-72%) scale(1);
-z-index:2;
-}
+    /* TEXT */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      padding: 28px 22px;
+      color: #5a4a3a;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.2s ease .8s;
+      position: relative;
+    }
 
-.open img{opacity:1;}
-.open .overlay{opacity:1;}
+    /* Decorative corner flourishes */
+    .corner-flourish {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      opacity: 0.5;
+    }
 
-/* MOBILE */
-@media(max-width:600px){
-.scene{transform:scale(.88);}
-}
-</style>
+    .corner-flourish.top-left {
+      top: 8px;
+      left: 8px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M5,95 Q5,50 50,50 Q5,50 5,5" stroke="%23d4af37" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="3" fill="%23d4af37"/></svg>') no-repeat;
+      background-size: contain;
+    }
+
+    .corner-flourish.top-right {
+      top: 8px;
+      right: 8px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M95,95 Q95,50 50,50 Q95,50 95,5" stroke="%23d4af37" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="3" fill="%23d4af37"/></svg>') no-repeat;
+      background-size: contain;
+    }
+
+    .corner-flourish.bottom-left {
+      bottom: 8px;
+      left: 8px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M5,5 Q5,50 50,50 Q5,50 5,95" stroke="%23d4af37" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="3" fill="%23d4af37"/></svg>') no-repeat;
+      background-size: contain;
+    }
+
+    .corner-flourish.bottom-right {
+      bottom: 8px;
+      right: 8px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M95,5 Q95,50 50,50 Q95,50 95,95" stroke="%23d4af37" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="3" fill="%23d4af37"/></svg>') no-repeat;
+      background-size: contain;
+    }
+
+    .top-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      letter-spacing: 4px;
+      font-weight: 300;
+      color: #3a3a3a;
+    }
+
+    .ampersand {
+      font-family: 'Great Vibes', cursive;
+      font-size: 32px;
+      color: #d4af37;
+      margin: 2px 0;
+    }
+
+    .mid-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .divider {
+      width: 80px;
+      height: 1.5px;
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
+      position: relative;
+    }
+
+    .divider::before {
+      content: '❦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fffbf5;
+      padding: 0 8px;
+      color: #d4af37;
+      font-size: 14px;
+    }
+
+    .mid-text {
+      font-size: 9px;
+      letter-spacing: 2px;
+      line-height: 1.8;
+      color: #6a5a4a;
+      text-transform: uppercase;
+    }
+
+    .event-info {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #5a4a3a;
+      font-style: italic;
+    }
+
+    .bottom-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      letter-spacing: 4px;
+      font-weight: 300;
+      color: #3a3a3a;
+    }
+
+    .floral-accent {
+      font-size: 18px;
+      color: #d4af37;
+      opacity: 0.7;
+      margin: 6px 0;
+    }
+
+    /* ================= OPEN ================= */
+
+    .open .env-flap-left {
+      transform: rotateX(-180deg);
+    }
+
+    .open .env-flap-right {
+      transform: rotateX(-180deg);
+    }
+
+    .open .envelope-bow {
+      transform: translateX(-50%) translateY(-20px);
+      opacity: 0.5;
+    }
+
+    .open .envelope {
+      opacity: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .open .card {
+      opacity: 1;
+      transform: translate(-50%, -72%) scale(1);
+      z-index: 2;
+    }
+
+    .open img {
+      opacity: 1;
+    }
+
+    .open .overlay {
+      opacity: 1;
+    }
+
+    /* MOBILE */
+    @media(max-width:600px) {
+      .scene {
+        transform: scale(.88);
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="scene" onclick="openInvite()" id="scene">
+  <div class="scene" onclick="openInvite()" id="scene">
 
-<!-- CARD -->
-<div class="card">
-<img src="Photo.jpeg" alt="Couple">
+    <!-- CARD -->
+    <div class="card">
 
-<div class="overlay">
-<div class="top-name">RUPALI</div>
+      <div class="overlay">
+        <!-- Corner decorations -->
+        <div class="corner-flourish top-left"></div>
+        <div class="corner-flourish top-right"></div>
+        <div class="corner-flourish bottom-left"></div>
+        <div class="corner-flourish bottom-right"></div>
 
-<div class="mid-text">
-INVITE YOU TO THE CELEBRATION OF THEIR MARRIAGE
-<br><br>
-SATURDAY, APRIL 14, 2026 AT 6PM
-<br>
-PROMONTORY POINT, BURNHAM PARK
-</div>
+        <div class="top-section">
+          <div class="top-name">RUPALI</div>
+          <div class="ampersand">&</div>
+        </div>
 
-<div class="bottom-name">& MYYANK</div>
-</div>
-</div>
+        <div class="mid-section">
+          <div class="divider"></div>
+          <div class="mid-text">
+            REQUEST THE HONOR OF YOUR PRESENCE<br>
+            AT THE CELEBRATION OF THEIR MARRIAGE
+          </div>
+          <div class="event-info">
+            Saturday, April 14, 2026
+          </div>
+          <div class="floral-accent">✦ ❦ ✦</div>
+        </div>
 
-<!-- ENVELOPE -->
-<div class="envelope">
-  <div class="env-top-left"></div>
-  <div class="env-top-right"></div>
-  <div class="env-bottom-left"></div>
-  <div class="env-bottom-right"></div>
-  <div class="tap">CLICK TO OPEN</div>
-</div>
+        <div class="bottom-name">MYYANK</div>
+      </div>
+    </div>
 
-</div>
+    <!-- ENVELOPE -->
+    <div class="envelope">
+      <!-- Base envelope body -->
+      <div class="envelope-base"></div>
 
-<script>
-function openInvite(){
-  document.getElementById("scene").classList.toggle("open");
-}
-</script>
+      <!-- Opening flaps -->
+      <div class="env-flap-left"></div>
+      <div class="env-flap-right"></div>
+
+      <!-- Decorative Bow -->
+      <div class="envelope-bow">
+        <img src="wedding_bow.png" alt="Decorative Bow">
+      </div>
+
+      <div class="tap">CLICK TO OPEN</div>
+    </div>
+
+  </div>
+
+  <script>
+    function openInvite() {
+      document.getElementById("scene").classList.toggle("open");
+    }
+  </script>
 
 </body>
+
 </html>
