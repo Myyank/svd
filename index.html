@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <title>Wedding Invite</title>
 
@@ -19,13 +19,16 @@
     }
 
     body {
-      height: 100vh;
+      height: 100svh;
+      /* Modern mobile height unit */
       background: url('wbg1.png') no-repeat center center fixed;
       background-size: cover;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      /* Prevent bounce on mobile */
     }
 
     /* SCENE */
@@ -288,7 +291,18 @@
     /* MOBILE */
     @media(max-width:600px) {
       .scene {
-        transform: scale(.88);
+        transform: scale(0.8) translateY(40px);
+        transform-origin: center center;
+      }
+
+      .open .card {
+        /* Reduced lift for mobile screens to avoid cut-off */
+        transform: translateX(-50%) translateY(-150px) scale(1.1) translateZ(50px);
+      }
+
+      .tap {
+        bottom: -60px;
+        /* Space out tap text */
       }
     }
   </style>
