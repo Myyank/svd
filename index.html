@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
         rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
     <style>
         * {
@@ -280,6 +280,8 @@
             font-weight: 400;
             letter-spacing: 5px;
             margin-top: 10px;
+            margin-left: 20px;
+            /* Shifted to the right as requested */
             text-transform: uppercase;
             color: #333;
         }
@@ -352,6 +354,30 @@
                 /* Space out tap text */
             }
         }
+
+        /* HEART PARTICLES */
+        .heart-particle {
+            position: fixed;
+            bottom: -50px;
+            font-size: 20px;
+            color: #ff4d6d;
+            pointer-events: none;
+            z-index: 9999;
+            user-select: none;
+            animation: floatUp var(--duration) linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) translateX(var(--drift)) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 
@@ -374,7 +400,7 @@
 
                     <div class="names-info">RUPALI & MYYANK</div>
                     <div class="scratch-container">
-                        <div class="date-info">14.08.2026</div>
+                        <div class="date-info">14.04.2026</div>
                         <canvas id="scratch-canvas"></canvas>
                     </div>
                 </div>
@@ -489,33 +515,45 @@
                     canvas.style.opacity = '0';
                     canvas.style.transition = 'opacity 0.5s ease';
 
-                    // Confetti Celebration!
-                    triggerConfetti();
+                    // Heart Celebration!
+                    spawnHearts();
 
                     setTimeout(() => canvas.remove(), 500);
                 }
             }
 
-            function triggerConfetti() {
-                const count = 200;
-                const defaults = {
-                    origin: { y: 0.7 },
-                    colors: ['#d4af37', '#f1d592', '#b8860b', '#C0C0C0', '#E5E4E2', '#FF0000', '#0000FF', '#FF69B4', '#8A2BE2']
-                };
+            function spawnHearts() {
+                const colors = ['#ff4d6d', '#ff758f', '#ff8fa3', '#ffb3c1', '#c9184a'];
+                const heartCount = 50;
 
-                function fire(particleRatio, opts) {
-                    confetti({
-                        ...defaults,
-                        ...opts,
-                        particleCount: Math.floor(count * particleRatio)
-                    });
+                for (let i = 0; i < heartCount; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.innerHTML = '❤️';
+
+                    // Randomize appearance and animation
+                    const size = Math.random() * 15 + 10; // 10px to 25px
+                    const left = Math.random() * 100; // 0% to 100%
+                    const duration = Math.random() * 3 + 3; // 3s to 6s
+                    const drift = (Math.random() - 0.5) * 200; // -100px to 100px
+                    const rotation = (Math.random() - 0.5) * 360; // Random rotation
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+
+                    heart.style.left = left + 'vw';
+                    heart.style.fontSize = size + 'px';
+                    heart.style.color = color;
+                    heart.style.setProperty('--duration', duration + 's');
+                    heart.style.setProperty('--drift', drift + 'px');
+                    heart.style.setProperty('--rotation', rotation + 'deg');
+                    heart.style.animationDelay = (Math.random() * 2) + 's';
+
+                    document.body.appendChild(heart);
+
+                    // Cleanup
+                    setTimeout(() => {
+                        heart.remove();
+                    }, (duration + 2) * 1000);
                 }
-
-                fire(0.25, { spread: 26, startVelocity: 55 });
-                fire(0.2, { spread: 60 });
-                fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-                fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-                fire(0.1, { spread: 120, startVelocity: 45 });
             }
 
             canvas.addEventListener('mousedown', () => isDrawing = true);
