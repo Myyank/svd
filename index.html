@@ -2,500 +2,507 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <title>Wedding Invite</title>
+    <title>Wedding Invite</title>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
-    rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      height: 100svh;
-      /* Modern mobile height unit */
-      background: url('wbg1.png') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Inter', sans-serif;
-      overflow: hidden;
-      /* Prevent bounce on mobile */
-    }
+        body {
+            height: 100svh;
+            /* Modern mobile height unit */
+            background: url('wbg1.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Prevent bounce on mobile */
+        }
 
-    /* SCENE */
-    .scene {
-      position: relative;
-      width: 320px;
-      height: 450px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
+        /* SCENE */
+        .scene {
+            position: relative;
+            width: 320px;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
 
-    .envelope {
-      position: relative;
-      width: 300px;
-      height: 200px;
-      background: transparent;
-      border-radius: 8px;
-      transform-style: preserve-3d;
-      transition: transform 0.6s ease;
-      z-index: 10;
-      /* Default centering for mobile */
-      top: 0;
-      left: 0;
-    }
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: transparent;
+            border-radius: 8px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            z-index: 10;
+            /* Default centering for mobile */
+            top: 0;
+            left: 0;
+        }
 
-    /* Desktop arch alignment */
-    @media (min-width: 601px) {
-      .envelope {
-        top: 60px;
-        left: 40px;
-      }
-    }
-
-
-    .envelope:hover {
-      transform: scale(1.02);
-    }
-
-    /* BACK OF ENVELOPE (Ivory) */
-    .envelope-base {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 235, 0.9) 100%);
-      border-radius: 8px;
-      border: 1px solid #e8d5c4;
-      z-index: 1;
-    }
-
-    /* FRONT POCKET (V-SHAPE) (Ivory/Gold) */
-    .envelope-pocket {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 235, 0.9) 100%);
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 55%, 0 0);
-      z-index: 3;
-      border-radius: 0 0 8px 8px;
-      border: 1px solid #e8d5c4;
-      box-shadow: 0 8px 25px rgba(139, 115, 85, 0.1);
-      /* Softer shadow */
-    }
-
-    .envelope-pocket::after {
-      content: '';
-      position: absolute;
-      inset: 8px;
-      border: 1.5px solid rgba(212, 175, 55, 0.3);
-      border-radius: 4px;
-      clip-path: polygon(0 20%, 100% 20%, 100% 100%, 0 100%);
-      pointer-events: none;
-    }
-
-    /* TOP FLAP CONTAINER (Handles Rotation) */
-    .env-flap-wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 4;
-      transform-origin: top center;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-      /* Let clicks pass through if needed, but wrapper is mainly for grouping */
-    }
-
-    /* THE ACTUAL FLAP SHAPE (Lavender Triangle) */
-    .env-flap-shape {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(180deg, rgba(245, 235, 225, 0.85) 0%, rgba(235, 225, 215, 0.85) 100%);
-      clip-path: polygon(0 0, 100% 0, 50% 60%);
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      /* Shadow already subtle, keeping it */
-    }
-
-    .env-flap-shape::after {
-      content: '❦';
-      position: absolute;
-      top: 25%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      color: #d4af37;
-      opacity: 0.6;
-    }
-
-    /* BOW ON FLAP (Inside Wrapper, Outside Shape to avoid clipping) */
-    .envelope-bow {
-      position: absolute;
-      bottom: 60px;
-      /* Adjusted to sit nicely on the V */
-      left: 50%;
-      transform: translateX(-50%);
-      width: 110px;
-      /* Slightly larger */
-      height: 90px;
-      z-index: 10;
-      transition: transform 0.4s ease;
-      filter: drop-shadow(0 4px 10px rgba(139, 115, 85, 0.3));
-    }
+        /* Desktop arch alignment */
+        @media (min-width: 601px) {
+            .envelope {
+                top: 60px;
+                left: 40px;
+            }
+        }
 
 
+        .envelope:hover {
+            transform: scale(1.02);
+        }
 
-    .envelope-bow img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+        /* BACK OF ENVELOPE (Ivory) */
+        .envelope-base {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 235, 0.9) 100%);
+            border-radius: 8px;
+            border: 1px solid #e8d5c4;
+            z-index: 1;
+        }
 
-    /* OPEN STATE ANIMATIONS */
-    /* OPEN STATE ANIMATIONS */
-    .open .env-flap-wrapper {
-      transform: rotateX(180deg);
-      z-index: 0;
-    }
+        /* FRONT POCKET (V-SHAPE) (Ivory/Gold) */
+        .envelope-pocket {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 250, 245, 0.9) 0%, rgba(255, 245, 235, 0.9) 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 55%, 0 0);
+            z-index: 3;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e8d5c4;
+            box-shadow: 0 8px 25px rgba(139, 115, 85, 0.1);
+            /* Softer shadow */
+        }
 
-    /* Bow rotates with flap, no fading */
-    /* .open .envelope-bow intentionally removed as it needs no properties */
+        .envelope-pocket::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            clip-path: polygon(0 20%, 100% 20%, 100% 100%, 0 100%);
+            pointer-events: none;
+        }
 
-    /* WEDDING CARD */
-    .card {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      width: 95%;
-      height: 190%;
-      background: url('bg2.png');
-      background-size: 100% 100%;
-      /* Adjusted to prevent cropping */
-      z-index: 2;
-      border-radius: 4px;
-      border: 1px dotted #ccc;
-      /* Outer dotted border */
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      transform: translateX(-50%) translateY(0) scale(0.95) translateZ(0);
-      clip-path: inset(0 0 50% 0);
-      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), clip-path 1s ease 0.2s, opacity 0.5s ease;
-      opacity: 0;
-      overflow: hidden;
-      transform-origin: top center;
-    }
+        /* TOP FLAP CONTAINER (Handles Rotation) */
+        .env-flap-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            /* Let clicks pass through if needed, but wrapper is mainly for grouping */
+        }
 
-    .open .card {
-      opacity: 1;
-      /* Slide UP, Scale UP, Unmask Bottom */
-      transform: translateX(-50%) translateY(-180px) scale(1.15) translateZ(50px);
-      clip-path: inset(0 0 0% 0);
-      /* REVEAL FULL CARD */
-      z-index: 50;
-      transition-delay: 0.25s;
-    }
+        /* THE ACTUAL FLAP SHAPE (Lavender Triangle) */
+        .env-flap-shape {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(245, 235, 225, 0.85) 0%, rgba(235, 225, 215, 0.85) 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 60%);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            /* Shadow already subtle, keeping it */
+        }
 
-    .open .card::before {
-      opacity: 1;
-    }
+        .env-flap-shape::after {
+            content: '❦';
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #d4af37;
+            opacity: 0.6;
+        }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      padding: 30px 20px;
-      color: #333;
-      /* Darker, classic text */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.8s ease 0.4s;
-      gap: 5px;
-    }
-
-    .open .overlay {
-      opacity: 1;
-    }
-
-    /* TYPOGRAPHY MATCH */
-    .save-the-date-text {
-      font-family: 'Great Vibes', cursive;
-      font-size: 32px;
-      /* Adjusted for Great Vibes scale */
-      letter-spacing: 1px;
-      margin-top: 15px;
-      color: #000;
-      font-weight: 400;
-    }
-
-    .intro-text {
-      font-family: 'Libre Baskerville', serif;
-      font-size: 6px;
-      font-weight: 400;
-      letter-spacing: 2px;
-      color: #333;
-      margin-bottom: 5px;
-    }
-
-    .card-photo {
-      width: 180px;
-      height: 220px;
-      margin: 10px 0;
-      background-image: url('photo2.png'), radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
-      background-size: contain, 80% 80%;
-      background-repeat: no-repeat, no-repeat;
-      background-position: bottom center, center center;
-      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.2));
-      /* Enhanced shadow for lifelike depth */
-    }
-
-    .names-info {
-      font-family: 'Libre Baskerville', serif;
-      font-size: 11px;
-      font-weight: 400;
-      letter-spacing: 4px;
-      margin-top: 8px;
-      text-transform: uppercase;
-      color: #333;
-    }
-
-    .date-info {
-      font-family: 'Libre Baskerville', serif;
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 3px;
-      margin-top: 6px;
-      text-transform: uppercase;
-      color: #333;
-      position: relative;
-    }
-
-    /* SCRATCH-OFF STYLING */
-    .scratch-container {
-      position: relative;
-      width: 140px;
-      height: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 5px;
-      cursor: crosshair;
-      user-select: none;
-    }
-
-    #scratch-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 4px;
-      z-index: 2;
-      touch-action: none;
-    }
+        /* BOW ON FLAP (Inside Wrapper, Outside Shape to avoid clipping) */
+        .envelope-bow {
+            position: absolute;
+            bottom: 60px;
+            /* Adjusted to sit nicely on the V */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 110px;
+            /* Slightly larger */
+            height: 90px;
+            z-index: 10;
+            transition: transform 0.4s ease;
+            filter: drop-shadow(0 4px 10px rgba(139, 115, 85, 0.3));
+        }
 
 
 
+        .envelope-bow img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
-    .tap {
-      position: absolute;
-      bottom: -40px;
-      width: 100%;
-      text-align: center;
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: #a89070;
-      font-family: 'Montserrat', sans-serif;
-    }
+        /* OPEN STATE ANIMATIONS */
+        /* OPEN STATE ANIMATIONS */
+        .open .env-flap-wrapper {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
 
-    /* MOBILE */
-    @media(max-width:600px) {
-      .scene {
-        transform: scale(0.85);
-        /* Slightly larger on mobile */
-        transform-origin: center center;
-        /* No translateY needed as top:0/left:0 centers it in flex body */
-      }
+        /* Bow rotates with flap, no fading */
+        /* .open .envelope-bow intentionally removed as it needs no properties */
 
-      .open .card {
-        /* Reduced lift for mobile screens to avoid cut-off */
-        transform: translateX(-50%) translateY(-150px) scale(1.1) translateZ(50px);
-      }
+        /* WEDDING CARD */
+        .card {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 95%;
+            height: 190%;
+            background: url('bg2.png');
+            background-size: 100% 100%;
+            /* Adjusted to prevent cropping */
+            z-index: 2;
+            border-radius: 4px;
+            border: 1px dotted #ccc;
+            /* Outer dotted border */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transform: translateX(-50%) translateY(0) scale(0.95) translateZ(0);
+            clip-path: inset(0 0 50% 0);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), clip-path 1s ease 0.2s, opacity 0.5s ease;
+            opacity: 0;
+            overflow: hidden;
+            transform-origin: top center;
+        }
 
-      .tap {
-        bottom: -60px;
-        /* Space out tap text */
-      }
-    }
-  </style>
+        .open .card {
+            opacity: 1;
+            /* Slide UP, Scale UP, Unmask Bottom */
+            transform: translateX(-50%) translateY(-180px) scale(1.15) translateZ(50px);
+            clip-path: inset(0 0 0% 0);
+            /* REVEAL FULL CARD */
+            z-index: 50;
+            transition-delay: 0.25s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('photo2.png');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(1.1);
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .open .card::before {
+            opacity: 0.1;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            padding: 40px 20px;
+            color: #333;
+            /* Darker, classic text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Center content vertically */
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.4s;
+            gap: 15px;
+            /* Increased gap for better spacing */
+        }
+
+        .open .overlay {
+            opacity: 1;
+        }
+
+        /* TYPOGRAPHY MATCH */
+        .save-the-date-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 32px;
+            /* Adjusted for Great Vibes scale */
+            letter-spacing: 1px;
+            margin-top: 15px;
+            color: #000;
+            font-weight: 400;
+        }
+
+        .intro-text {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 6px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+
+
+        .names-info {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 13px;
+            /* Slightly larger for emphasis */
+            font-weight: 400;
+            letter-spacing: 5px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .date-info {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin-top: 6px;
+            text-transform: uppercase;
+            color: #333;
+            position: relative;
+        }
+
+        /* SCRATCH-OFF STYLING */
+        .scratch-container {
+            position: relative;
+            width: 140px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+            cursor: crosshair;
+            user-select: none;
+        }
+
+        #scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            z-index: 2;
+            touch-action: none;
+        }
+
+
+
+
+        .tap {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: #a89070;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* MOBILE */
+        @media(max-width:600px) {
+            .scene {
+                transform: scale(0.85);
+                /* Slightly larger on mobile */
+                transform-origin: center center;
+                /* No translateY needed as top:0/left:0 centers it in flex body */
+            }
+
+            .open .card {
+                /* Reduced lift for mobile screens to avoid cut-off */
+                transform: translateX(-50%) translateY(-150px) scale(1.1) translateZ(50px);
+            }
+
+            .tap {
+                bottom: -60px;
+                /* Space out tap text */
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <div class="scene" onclick="openInvite()" id="scene">
+    <div class="scene" onclick="openInvite()" id="scene">
 
-    <!-- ENVELOPE -->
-    <div class="envelope">
-      <!-- Base (back) -->
-      <div class="envelope-base"></div>
+        <!-- ENVELOPE -->
+        <div class="envelope">
+            <!-- Base (back) -->
+            <div class="envelope-base"></div>
 
-      <!-- CARD (Inside the pocket) -->
-      <div class="card">
-        <div class="overlay">
-          <div class="save-the-date-text">save the date</div>
-          <div class="intro-text">TO CELEBRATE THE WEDDING OF</div>
+            <!-- CARD (Inside the pocket) -->
+            <div class="card">
+                <div class="overlay">
+                    <div class="save-the-date-text">save the date</div>
+                    <div class="intro-text">TO CELEBRATE THE WEDDING OF</div>
 
-          <div class="card-photo"></div>
 
-          <div class="names-info">RUPALI AND MYYANK</div>
-          <div class="scratch-container">
-            <div class="date-info">14.08.2026</div>
-            <canvas id="scratch-canvas"></canvas>
-          </div>
+
+                    <div class="names-info">RUPALI AND MYYANK</div>
+                    <div class="scratch-container">
+                        <div class="date-info">14.08.2026</div>
+                        <canvas id="scratch-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pocket (front) -->
+            <div class="envelope-pocket"></div>
+
+            <!-- Opening flap -->
+            <!-- Opening flap wrapper (Contains Shape + Bow) -->
+            <div class="env-flap-wrapper">
+                <div class="env-flap-shape"></div>
+                <!-- Decorative Bow is now a sibling of shape, inside wrapper -->
+                <div class="envelope-bow">
+                    <img src="wedding_bow.png" alt="Decorative Bow">
+                </div>
+            </div>
+
+            <div class="tap">CLICK TO OPEN</div>
         </div>
-      </div>
 
-      <!-- Pocket (front) -->
-      <div class="envelope-pocket"></div>
-
-      <!-- Opening flap -->
-      <!-- Opening flap wrapper (Contains Shape + Bow) -->
-      <div class="env-flap-wrapper">
-        <div class="env-flap-shape"></div>
-        <!-- Decorative Bow is now a sibling of shape, inside wrapper -->
-        <div class="envelope-bow">
-          <img src="wedding_bow.png" alt="Decorative Bow">
-        </div>
-      </div>
-
-      <div class="tap">CLICK TO OPEN</div>
     </div>
 
-  </div>
+    <script>
+        function openInvite() {
+            const scene = document.getElementById("scene");
+            const wasOpen = scene.classList.contains("open");
+            scene.classList.toggle("open");
 
-  <script>
-    function openInvite() {
-      const scene = document.getElementById("scene");
-      const wasOpen = scene.classList.contains("open");
-      scene.classList.toggle("open");
-
-      // Initialize scratch canvas when opened
-      if (!wasOpen) {
-        setTimeout(initScratch, 500);
-      }
-    }
-
-    function initScratch() {
-      const canvas = document.getElementById('scratch-canvas');
-      if (!canvas) return;
-
-      const ctx = canvas.getContext('2d');
-      const container = canvas.parentElement;
-
-      // Set canvas size to match container
-      canvas.width = container.offsetWidth;
-      canvas.height = container.offsetHeight;
-
-      // Fill with gold metallic color
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, '#d4af37');
-      gradient.addColorStop(0.5, '#f1d592');
-      gradient.addColorStop(1, '#b8860b');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Add some "scratch" texture
-      ctx.strokeStyle = 'rgba(0,0,0,0.05)';
-      for (let i = 0; i < 10; i++) {
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.stroke();
-      }
-
-      let isDrawing = false;
-
-      function scratch(e) {
-        if (!isDrawing) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX || e.touches[0].clientX) - rect.left;
-        const y = (e.clientY || e.touches[0].clientY) - rect.top;
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 10, 0, Math.PI * 2);
-        ctx.fill();
-
-        checkScratchPercent();
-      }
-
-      function checkScratchPercent() {
-        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        let count = 0;
-        for (let i = 3; i < pixels.length; i += 4) {
-          if (pixels[i] === 0) count++;
+            // Initialize scratch canvas when opened
+            if (!wasOpen) {
+                setTimeout(initScratch, 500);
+            }
         }
 
-        // auto-clear if 60% is scratched
-        if (count / (pixels.length / 4) > 0.6) {
-          canvas.style.opacity = '0';
-          canvas.style.transition = 'opacity 0.5s ease';
+        function initScratch() {
+            const canvas = document.getElementById('scratch-canvas');
+            if (!canvas) return;
 
-          // Confetti Celebration!
-          triggerConfetti();
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
 
-          setTimeout(() => canvas.remove(), 500);
+            // Set canvas size to match container
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+
+            // Fill with gold metallic color
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#d4af37');
+            gradient.addColorStop(0.5, '#f1d592');
+            gradient.addColorStop(1, '#b8860b');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Add some "scratch" texture
+            ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.stroke();
+            }
+
+            let isDrawing = false;
+
+            function scratch(e) {
+                if (!isDrawing) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.beginPath();
+                ctx.arc(x, y, 10, 0, Math.PI * 2);
+                ctx.fill();
+
+                checkScratchPercent();
+            }
+
+            function checkScratchPercent() {
+                const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+                let count = 0;
+                for (let i = 3; i < pixels.length; i += 4) {
+                    if (pixels[i] === 0) count++;
+                }
+
+                // auto-clear if 60% is scratched
+                if (count / (pixels.length / 4) > 0.6) {
+                    canvas.style.opacity = '0';
+                    canvas.style.transition = 'opacity 0.5s ease';
+
+                    // Confetti Celebration!
+                    triggerConfetti();
+
+                    setTimeout(() => canvas.remove(), 500);
+                }
+            }
+
+            function triggerConfetti() {
+                const count = 200;
+                const defaults = {
+                    origin: { y: 0.7 },
+                    colors: ['#d4af37', '#f1d592', '#b8860b', '#f9f7f2', '#e8d5c4']
+                };
+
+                function fire(particleRatio, opts) {
+                    confetti({
+                        ...defaults,
+                        ...opts,
+                        particleCount: Math.floor(count * particleRatio)
+                    });
+                }
+
+                fire(0.25, { spread: 26, startVelocity: 55 });
+                fire(0.2, { spread: 60 });
+                fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+                fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+                fire(0.1, { spread: 120, startVelocity: 45 });
+            }
+
+            canvas.addEventListener('mousedown', () => isDrawing = true);
+            canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+
+            window.addEventListener('mousemove', scratch);
+            window.addEventListener('touchmove', scratch);
+
+            window.addEventListener('mouseup', () => isDrawing = false);
+            window.addEventListener('touchend', () => isDrawing = false);
         }
-      }
-
-      function triggerConfetti() {
-        const count = 200;
-        const defaults = {
-          origin: { y: 0.7 },
-          colors: ['#d4af37', '#f1d592', '#b8860b', '#f9f7f2', '#e8d5c4']
-        };
-
-        function fire(particleRatio, opts) {
-          confetti({
-            ...defaults,
-            ...opts,
-            particleCount: Math.floor(count * particleRatio)
-          });
-        }
-
-        fire(0.25, { spread: 26, startVelocity: 55 });
-        fire(0.2, { spread: 60 });
-        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-        fire(0.1, { spread: 120, startVelocity: 45 });
-      }
-
-      canvas.addEventListener('mousedown', () => isDrawing = true);
-      canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
-
-      window.addEventListener('mousemove', scratch);
-      window.addEventListener('touchmove', scratch);
-
-      window.addEventListener('mouseup', () => isDrawing = false);
-      window.addEventListener('touchend', () => isDrawing = false);
-    }
-  </script>
+    </script>
 
 </body>
 
