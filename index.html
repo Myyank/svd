@@ -543,6 +543,52 @@
             mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
         }
 
+        /* Mobile specific responsiveness for the calendar */
+        @media (max-width: 600px) {
+            .calendar-card {
+                width: 95vw;
+                margin-top: 60px;
+                /* Centered framing for mobile */
+            }
+
+            .calendar-title {
+                font-size: 32px;
+                padding: 5px 20px;
+            }
+
+            .calendar-month {
+                font-size: 36px;
+                margin-top: -5px;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 11vw);
+                gap: 5px;
+            }
+
+            .weekday,
+            .day {
+                width: 11vw;
+                height: 11vw;
+                font-size: 14px;
+            }
+
+            .weekday {
+                font-size: 13px;
+            }
+
+            .calendar-photo {
+                width: 90%;
+                margin-top: -40px;
+                /* Maintain overlap on smaller width */
+            }
+
+            /* Adjust heart spawn to be clearer on mobile */
+            .heart-particle {
+                font-size: 16px;
+            }
+        }
+
         .calendar-photo img {
             width: 100%;
             height: auto;
