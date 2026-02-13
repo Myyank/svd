@@ -8,10 +8,8 @@
     <title>Wedding Invite</title>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
         rel="stylesheet">
-
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
     <style>
         * {
@@ -434,8 +432,10 @@
             font-size: 42px;
             color: #000;
             /* Pure black */
-            margin-bottom: 5px;
-            /* Shortened */
+            margin-top: 25px;
+            /* Shifted lower */
+            margin-bottom: -5px;
+            /* Tighter stack */
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             background: radial-gradient(circle, rgba(255, 252, 245, 0.9) 0%, rgba(255, 252, 245, 0) 70%);
             padding: 10px 40px;
@@ -447,7 +447,8 @@
             margin-bottom: 5px;
             /* Shortened further */
             background: radial-gradient(circle, rgba(255, 252, 245, 0.8) 0%, rgba(255, 252, 245, 0) 70%);
-            padding: 15px 30px;
+            padding: 5px 30px;
+            /* Reduced vertical padding */
             border-radius: 50%;
         }
 
@@ -610,7 +611,8 @@
 
 <body>
     <div id="main-view" class="scene-container">
-        <div class="scene" onclick="openInvite()" id="scene">
+        <div class="scene" onclick="openInvite()" id="scene" role="button" tabindex="0"
+            aria-label="Open wedding invitation">
             <!-- ENVELOPE (existing structure) -->
             <div class="envelope">
                 <div class="envelope-base"></div>
@@ -639,7 +641,7 @@
 
     <div id="calendar-view" class="calendar-view">
         <div class="calendar-card">
-            <div class="calendar-title">Save the Date</div>
+            <div class="calendar-title">#RuMyyiesNow</div>
             <div class="calendar-header">
                 <div class="calendar-year">2026</div>
                 <div class="calendar-month">April</div>
@@ -697,13 +699,15 @@
     </audio>
 
     <script>
+        let scratchInitialized = false;
+
         function openInvite() {
             const scene = document.getElementById("scene");
             const wasOpen = scene.classList.contains("open");
             scene.classList.toggle("open");
 
-            // Play music on open
-            if (!wasOpen) {
+            // Play music and initialize scratch effect on first open
+            if (!wasOpen && !scratchInitialized) {
                 const audio = document.getElementById('bg-audio');
                 if (audio) {
                     audio.volume = 0;
@@ -722,7 +726,10 @@
                 }
 
                 // Initialize scratch canvas
-                setTimeout(initScratch, 500);
+                setTimeout(() => {
+                    initScratch();
+                    scratchInitialized = true;
+                }, 500);
             }
         }
 
