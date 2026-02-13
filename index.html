@@ -11,6 +11,8 @@
     href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
     rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -280,7 +282,33 @@
       margin-top: 6px;
       text-transform: uppercase;
       color: #333;
+      position: relative;
     }
+
+    /* SCRATCH-OFF STYLING */
+    .scratch-container {
+      position: relative;
+      width: 140px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5px;
+      cursor: crosshair;
+      user-select: none;
+    }
+
+    #scratch-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+      z-index: 2;
+      touch-action: none;
+    }
+
 
 
 
@@ -335,7 +363,10 @@
           <div class="card-photo"></div>
 
           <div class="names-info">RUPALI AND MYYANK</div>
-          <div class="date-info">14.08.2026</div>
+          <div class="scratch-container">
+            <div class="date-info">14.08.2026</div>
+            <canvas id="scratch-canvas"></canvas>
+          </div>
         </div>
       </div>
 
@@ -360,7 +391,109 @@
   <script>
     function openInvite() {
       const scene = document.getElementById("scene");
+      const wasOpen = scene.classList.contains("open");
       scene.classList.toggle("open");
+
+      // Initialize scratch canvas when opened
+      if (!wasOpen) {
+        setTimeout(initScratch, 500);
+      }
+    }
+
+    function initScratch() {
+      const canvas = document.getElementById('scratch-canvas');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const container = canvas.parentElement;
+
+      // Set canvas size to match container
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+
+      // Fill with gold metallic color
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, '#d4af37');
+      gradient.addColorStop(0.5, '#f1d592');
+      gradient.addColorStop(1, '#b8860b');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Add some "scratch" texture
+      ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+      for (let i = 0; i < 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+      }
+
+      let isDrawing = false;
+
+      function scratch(e) {
+        if (!isDrawing) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || e.touches[0].clientX) - rect.left;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        checkScratchPercent();
+      }
+
+      function checkScratchPercent() {
+        const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let count = 0;
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] === 0) count++;
+        }
+
+        // auto-clear if 60% is scratched
+        if (count / (pixels.length / 4) > 0.6) {
+          canvas.style.opacity = '0';
+          canvas.style.transition = 'opacity 0.5s ease';
+
+          // Confetti Celebration!
+          triggerConfetti();
+
+          setTimeout(() => canvas.remove(), 500);
+        }
+      }
+
+      function triggerConfetti() {
+        const count = 200;
+        const defaults = {
+          origin: { y: 0.7 },
+          colors: ['#d4af37', '#f1d592', '#b8860b', '#f9f7f2', '#e8d5c4']
+        };
+
+        function fire(particleRatio, opts) {
+          confetti({
+            ...defaults,
+            ...opts,
+            particleCount: Math.floor(count * particleRatio)
+          });
+        }
+
+        fire(0.25, { spread: 26, startVelocity: 55 });
+        fire(0.2, { spread: 60 });
+        fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+        fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        fire(0.1, { spread: 120, startVelocity: 45 });
+      }
+
+      canvas.addEventListener('mousedown', () => isDrawing = true);
+      canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+
+      window.addEventListener('mousemove', scratch);
+      window.addEventListener('touchmove', scratch);
+
+      window.addEventListener('mouseup', () => isDrawing = false);
+      window.addEventListener('touchend', () => isDrawing = false);
     }
   </script>
 
