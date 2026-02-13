@@ -214,8 +214,8 @@
             position: absolute;
             inset: 0;
             background-image: url('photo2.png');
-            background-size: 70%;
-            /* Reduced size */
+            background-size: cover;
+            /* Fit perfectly and cover the entire card */
             background-position: center;
             background-repeat: no-repeat;
             filter: grayscale(100%) brightness(1.1);
@@ -231,8 +231,8 @@
         .overlay {
             position: absolute;
             inset: 0;
-            padding: 20px 20px;
-            /* Reduced top padding slightly to allow more space */
+            padding: 40px 20px;
+            /* Increased top padding to move all text lower */
             color: #333;
             /* Darker, classic text */
             display: flex;
@@ -256,8 +256,8 @@
             font-size: 32px;
             /* Adjusted for Great Vibes scale */
             letter-spacing: 1px;
-            margin-top: 30px;
-            /* Push it down slightly from top after switching to flex-start */
+            margin-top: 50px;
+            /* Further pushed down to sit a tad bit lower */
             color: #000;
             font-weight: 400;
         }
