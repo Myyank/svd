@@ -256,8 +256,8 @@
             font-size: 32px;
             /* Adjusted for Great Vibes scale */
             letter-spacing: 1px;
-            margin-top: 50px;
-            /* Further pushed down to sit a tad bit lower */
+            margin-top: 110px;
+            /* Pushed further down for better balance */
             color: #000;
             font-weight: 400;
         }
@@ -378,50 +378,272 @@
                 opacity: 0;
             }
         }
+
+        /* CALENDAR VIEW */
+        .calendar-view {
+            position: fixed;
+            inset: 0;
+            background: url('wbg1.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Center to align with arch */
+            padding: 20px;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+            /* Start slightly larger for zoom-in entry */
+            transition: opacity 1.8s ease-in-out, transform 1.8s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .calendar-view.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .calendar-card {
+            background: transparent;
+            /* Full transparency */
+            backdrop-filter: none;
+            width: 450px;
+            padding: 0px 20px;
+            margin-top: 120px;
+            /* Shifted even lower */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Desktop specific alignment */
+        @media (min-width: 601px) {
+            .calendar-card {
+                margin-left: 35px;
+                margin-top: 100px;
+                /* Shifted lower on desktop */
+            }
+        }
+
+        .calendar-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 42px;
+            color: #000;
+            /* Pure black */
+            margin-bottom: 5px;
+            /* Shortened */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            background: radial-gradient(circle, rgba(255, 252, 245, 0.9) 0%, rgba(255, 252, 245, 0) 70%);
+            padding: 10px 40px;
+            border-radius: 50%;
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 5px;
+            /* Shortened further */
+            background: radial-gradient(circle, rgba(255, 252, 245, 0.8) 0%, rgba(255, 252, 245, 0) 70%);
+            padding: 15px 30px;
+            border-radius: 50%;
+        }
+
+        .calendar-month {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            /* Grand upscale */
+            font-weight: 700;
+            text-transform: capitalize;
+            color: #000;
+            margin-top: -15px;
+            /* Tighter stack */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-year {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #000;
+            /* Sharp black */
+            font-weight: 700;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 40px);
+            /* Fixed width for perfect circles */
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .weekday {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            /* Specifically upscaled as requested */
+            font-weight: 900;
+            /* Max Bold */
+            color: #000;
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(255, 252, 245, 1) 0%, rgba(255, 252, 245, 0) 75%);
+            /* Stronger circular highlight */
+            border-radius: 50%;
+        }
+
+        .day {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            /* Reduced to be smaller than weekdays */
+            color: #000;
+            font-weight: 900;
+            /* Max Bold */
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle, rgba(255, 252, 245, 1) 0%, rgba(255, 252, 245, 0) 75%);
+            /* Stronger circular highlight */
+            border-radius: 50%;
+        }
+
+        .day.highlight {
+            color: #ff4d6d;
+            font-weight: 700;
+        }
+
+        .day.highlight::after {
+            content: '❤️';
+            position: absolute;
+            top: -5px;
+            font-size: 14px;
+            opacity: 0.8;
+            transform: scale(1.2);
+        }
+
+        .calendar-photo {
+            width: 280px;
+            height: auto;
+            margin-top: -85px;
+            /* Absolute proximity */
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+        }
+
+        .calendar-photo img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .scene-container {
+            transition: opacity 1.8s ease-in-out, transform 1.8s ease-in-out;
+        }
+
+        .scene-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1);
+            /* Zoom out slightly as it fades */
+        }
     </style>
 </head>
 
 <body>
-
-    <div class="scene" onclick="openInvite()" id="scene">
-
-        <!-- ENVELOPE -->
-        <div class="envelope">
-            <!-- Base (back) -->
-            <div class="envelope-base"></div>
-
-            <!-- CARD (Inside the pocket) -->
-            <div class="card">
-                <div class="overlay">
-                    <div class="save-the-date-text">Save the Date</div>
-                    <div class="intro-text">TO CELEBRATE THE WEDDING OF</div>
-
-
-
-                    <div class="names-info">RUPALI & MYYANK</div>
-                    <div class="scratch-container">
-                        <div class="date-info">14.04.2026</div>
-                        <canvas id="scratch-canvas"></canvas>
+    <div id="main-view" class="scene-container">
+        <div class="scene" onclick="openInvite()" id="scene">
+            <!-- ENVELOPE (existing structure) -->
+            <div class="envelope">
+                <div class="envelope-base"></div>
+                <div class="card">
+                    <div class="overlay">
+                        <div class="save-the-date-text">Save the Date</div>
+                        <div class="intro-text">TO CELEBRATE THE WEDDING OF</div>
+                        <div class="names-info">RUPALI & MYYANK</div>
+                        <div class="scratch-container">
+                            <div class="date-info">14.04.2026</div>
+                            <canvas id="scratch-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Pocket (front) -->
-            <div class="envelope-pocket"></div>
-
-            <!-- Opening flap -->
-            <!-- Opening flap wrapper (Contains Shape + Bow) -->
-            <div class="env-flap-wrapper">
-                <div class="env-flap-shape"></div>
-                <!-- Decorative Bow is now a sibling of shape, inside wrapper -->
-                <div class="envelope-bow">
-                    <img src="wedding_bow.png" alt="Decorative Bow">
+                <div class="envelope-pocket"></div>
+                <div class="env-flap-wrapper">
+                    <div class="env-flap-shape"></div>
+                    <div class="envelope-bow">
+                        <img src="wedding_bow.png" alt="Decorative Bow">
+                    </div>
                 </div>
+                <div class="tap">CLICK TO OPEN</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendar-view" class="calendar-view">
+        <div class="calendar-card">
+            <div class="calendar-title">Save the Date</div>
+            <div class="calendar-header">
+                <div class="calendar-year">2026</div>
+                <div class="calendar-month">April</div>
             </div>
 
-            <div class="tap">CLICK TO OPEN</div>
-        </div>
+            <div class="calendar-grid">
+                <div class="weekday">W</div>
+                <div class="weekday">T</div>
+                <div class="weekday">F</div>
+                <div class="weekday">S</div>
+                <div class="weekday">S</div>
+                <div class="weekday">M</div>
+                <div class="weekday">T</div>
+                <!-- April 2026 starts direct on Wednesday index 0 -->
+                <div class="day">1</div>
+                <div class="day">2</div>
+                <div class="day">3</div>
+                <div class="day">4</div>
+                <div class="day">5</div>
+                <div class="day">6</div>
+                <div class="day">7</div>
+                <div class="day">8</div>
+                <div class="day">9</div>
+                <div class="day">10</div>
+                <div class="day highlight">11</div>
+                <div class="day highlight">12</div>
+                <div class="day highlight">13</div>
+                <div class="day highlight">14</div>
+                <div class="day">15</div>
+                <div class="day">16</div>
+                <div class="day">17</div>
+                <div class="day">18</div>
+                <div class="day">19</div>
+                <div class="day">20</div>
+                <div class="day">21</div>
+                <div class="day">22</div>
+                <div class="day">23</div>
+                <div class="day">24</div>
+                <div class="day">25</div>
+                <div class="day">26</div>
+                <div class="day">27</div>
+                <div class="day">28</div>
+                <div class="day">29</div>
+                <div class="day">30</div>
+            </div>
 
+            <div class="calendar-photo">
+                <img src="photo2.png" alt="Couple">
+            </div>
+        </div>
     </div>
 
     <audio id="bg-audio" loop>
@@ -517,6 +739,12 @@
 
                     // Heart Celebration!
                     spawnHearts();
+
+                    // Transition to calendar after 5 seconds
+                    setTimeout(() => {
+                        document.getElementById('main-view').classList.add('hidden');
+                        document.getElementById('calendar-view').classList.add('active');
+                    }, 5000);
 
                     setTimeout(() => canvas.remove(), 500);
                 }
