@@ -51,10 +51,17 @@
       transform-style: preserve-3d;
       transition: transform 0.6s ease;
       z-index: 10;
-      top: 60px;
-      left: 40px;
-      /* Shifted right to center in arch */
-      /* Moved down to center the open state */
+      /* Default centering for mobile */
+      top: 0;
+      left: 0;
+    }
+
+    /* Desktop arch alignment */
+    @media (min-width: 601px) {
+      .envelope {
+        top: 60px;
+        left: 40px;
+      }
     }
 
 
@@ -291,8 +298,10 @@
     /* MOBILE */
     @media(max-width:600px) {
       .scene {
-        transform: scale(0.8) translateY(40px);
+        transform: scale(0.85);
+        /* Slightly larger on mobile */
         transform-origin: center center;
+        /* No translateY needed as top:0/left:0 centers it in flex body */
       }
 
       .open .card {
