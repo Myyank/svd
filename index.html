@@ -438,8 +438,8 @@
             backdrop-filter: none;
             width: 450px;
             padding: 0px 20px;
-            margin-top: 120px;
-            /* Shifted even lower */
+            margin-top: 70px;
+            /* Compressed for single-page view */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -450,8 +450,8 @@
         @media (min-width: 601px) {
             .calendar-card {
                 margin-left: 35px;
-                margin-top: 100px;
-                /* Shifted lower on desktop */
+                margin-top: 70px;
+                /* Compressed for single-page view */
             }
         }
 
@@ -465,7 +465,7 @@
             margin-bottom: -5px;
             /* Tighter stack */
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            background: radial-gradient(circle, rgba(255, 252, 245, 1) 0%, rgba(255, 252, 245, 1) 75%, rgba(255, 252, 245, 0) 100%);
+            background: radial-gradient(circle, rgba(177, 194, 157, 1) 0%, rgba(177, 194, 157, 1) 75%, rgba(177, 194, 157, 0) 100%);
             padding: 10px 40px;
             border-radius: 50%;
         }
@@ -494,7 +494,7 @@
 
         .calendar-year {
             font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
+            font-size: 11px;
             letter-spacing: 4px;
             color: #000;
             /* Sharp black */
@@ -513,10 +513,8 @@
 
         .weekday {
             font-family: 'Montserrat', sans-serif;
-            font-size: 20px;
-            /* Specifically upscaled as requested */
+            font-size: 14px;
             font-weight: 900;
-            /* Max Bold */
             color: #000;
             text-align: center;
             width: 40px;
@@ -524,9 +522,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle, rgba(255, 77, 109, 0.15) 0%, rgba(255, 77, 109, 0) 75%);
-            /* Soft light red highlight */
+            position: relative;
+            z-index: 1;
+        }
+
+        .weekday::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 26, 68, 0.6);
+            /* Translucent red frame */
             border-radius: 50%;
+            z-index: -1;
         }
 
         .day {
@@ -571,20 +582,21 @@
         .calendar-photo {
             width: 280px;
             height: auto;
-            margin-top: -85px;
-            /* Absolute proximity */
+            margin-top: -35px;
+            /* Pulled closer to dates */
             margin-left: 250px;
             /* Shifted slightly to the right */
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
-            -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
+            mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
         }
 
         /* Mobile specific responsiveness for the calendar */
         @media (max-width: 600px) {
             .calendar-card {
                 width: 95vw;
-                margin-top: 60px;
+                margin-top: 25px;
+                /* Compressed for mobile */
                 /* Centered framing for mobile */
             }
 
@@ -616,10 +628,10 @@
 
             .calendar-photo {
                 width: 90%;
-                margin-top: -40px;
+                margin-top: -25px;
+                /* Intimate proximity on mobile */
                 margin-left: 0;
                 /* Reset desktop shift for mobile centering */
-                /* Maintain overlap on smaller width */
             }
 
             /* Adjust heart spawn to be clearer on mobile */
@@ -731,7 +743,7 @@
             </div>
 
             <div class="calendar-photo">
-                <img src="photo2.png" alt="Couple">
+                <img src="photo3.jpeg" alt="Couple">
             </div>
         </div>
     </div>
