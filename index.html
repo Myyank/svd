@@ -326,8 +326,8 @@
             text-align: center;
             font-size: 8px;
             font-family: 'Montserrat', sans-serif;
-            color: rgba(212, 175, 55, 0.8);
-            /* Elegant semi-transparent gold */
+            color: #b8860b;
+            /* Darker, more vivid gold */
             letter-spacing: 1px;
             text-transform: uppercase;
             pointer-events: none;
@@ -339,7 +339,7 @@
 
             0%,
             100% {
-                opacity: 0.6;
+                opacity: 0.7;
             }
 
             50% {
@@ -611,6 +611,8 @@
             .calendar-photo {
                 width: 90%;
                 margin-top: -40px;
+                margin-left: 0;
+                /* Reset desktop shift for mobile centering */
                 /* Maintain overlap on smaller width */
             }
 
@@ -887,13 +889,22 @@
             }
 
             canvas.addEventListener('mousedown', () => isDrawing = true);
-            canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                if (e.cancelable) e.preventDefault();
+                scratch(e);
+            }, { passive: false });
 
             window.addEventListener('mousemove', scratch);
-            window.addEventListener('touchmove', scratch);
+            window.addEventListener('touchmove', (e) => {
+                if (isDrawing && e.cancelable) e.preventDefault();
+                scratch(e);
+            }, { passive: false });
 
             window.addEventListener('mouseup', () => isDrawing = false);
-            window.addEventListener('touchend', () => isDrawing = false);
+            window.addEventListener('touchend', () => {
+                isDrawing = false;
+            });
         }
     </script>
 
