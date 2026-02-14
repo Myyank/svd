@@ -319,6 +319,34 @@
             touch-action: none;
         }
 
+        .scratch-instruction {
+            position: absolute;
+            top: -12px;
+            width: 100%;
+            text-align: center;
+            font-size: 8px;
+            font-family: 'Montserrat', sans-serif;
+            color: rgba(212, 175, 55, 0.8);
+            /* Elegant semi-transparent gold */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 3;
+            animation: pulse-guide 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-guide {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
 
 
 
@@ -539,6 +567,8 @@
             height: auto;
             margin-top: -85px;
             /* Absolute proximity */
+            margin-left: 250px;
+            /* Shifted slightly to the right */
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
             -webkit-mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
             mask-image: linear-gradient(to bottom, black 65%, transparent 100%);
@@ -622,6 +652,7 @@
                         <div class="intro-text">TO CELEBRATE THE WEDDING OF</div>
                         <div class="names-info">RUPALI & MYYANK</div>
                         <div class="scratch-container">
+                            <div class="scratch-instruction">Scratch the date</div>
                             <div class="date-info">14.04.2026</div>
                             <canvas id="scratch-canvas"></canvas>
                         </div>
@@ -648,14 +679,17 @@
             </div>
 
             <div class="calendar-grid">
+                <div class="weekday">S</div>
+                <div class="weekday">M</div>
+                <div class="weekday">T</div>
                 <div class="weekday">W</div>
                 <div class="weekday">T</div>
                 <div class="weekday">F</div>
                 <div class="weekday">S</div>
-                <div class="weekday">S</div>
-                <div class="weekday">M</div>
-                <div class="weekday">T</div>
-                <!-- April 2026 starts direct on Wednesday index 0 -->
+                <!-- April 2026 starts on Wednesday (offset 3 for Sunday-start grid) -->
+                <div class="day"></div>
+                <div class="day"></div>
+                <div class="day"></div>
                 <div class="day">1</div>
                 <div class="day">2</div>
                 <div class="day">3</div>
@@ -723,6 +757,21 @@
                             clearInterval(fadeInterval);
                         }
                     }, 150);
+
+                    // Add 20-second limit with smooth fade-out
+                    setTimeout(() => {
+                        let currentVol = audio.volume;
+                        const fadeOutInterval = setInterval(() => {
+                            if (currentVol > 0.05) {
+                                currentVol -= 0.05;
+                                audio.volume = Math.max(currentVol, 0);
+                            } else {
+                                audio.volume = 0;
+                                audio.pause();
+                                clearInterval(fadeOutInterval);
+                            }
+                        }, 200);
+                    }, 25000); // 25 seconds
                 }
 
                 // Initialize scratch canvas
